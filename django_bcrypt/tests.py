@@ -1,4 +1,4 @@
-from __future__ import with_statement
+
 from contextlib import contextmanager
 
 import bcrypt
@@ -24,8 +24,8 @@ class CheckPasswordTest(TestCase):
     def test_unicode_password(self):
         user = User()
         with settings():
-            bcrypt_set_password(user, u"aáåäeéêëoôö")
-        self.assertTrue(bcrypt_check_password(user, u"aaaaeeeeooo"))
+            bcrypt_set_password(user, "aáåäeéêëoôö")
+        self.assertTrue(bcrypt_check_password(user, "aaaaeeeeooo"))
         self.assertFalse(bcrypt_check_password(user, 'invalid'))
 
     def test_sha1_password(self):
@@ -183,7 +183,7 @@ def patch(namespace, **values):
             namespace._setup()
         namespace = namespace._wrapped
 
-    for (name, value) in values.iteritems():
+    for (name, value) in list(values.items()):
         try:
             originals[name] = getattr(namespace, name)
         except AttributeError:
@@ -197,7 +197,7 @@ def patch(namespace, **values):
     try:
         yield
     finally:
-        for (name, original_value) in originals.iteritems():
+        for (name, original_value) in list(originals.items()):
             if original_value is NotImplemented:
                 if values[name] is not NotImplemented:
                     delattr(namespace, name)
